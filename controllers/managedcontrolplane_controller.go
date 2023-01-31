@@ -18,14 +18,22 @@ package controllers
 
 import (
 	"context"
+	"fmt"
 
+	managedcontrolplanev1 "github.com/alexander-demicev/k3s-CPaaS/api/v1alpha1"
+	apierrors "k8s.io/apimachinery/pkg/api/errors"
 	"k8s.io/apimachinery/pkg/runtime"
 	ctrl "sigs.k8s.io/controller-runtime"
 	"sigs.k8s.io/controller-runtime/pkg/client"
-	"sigs.k8s.io/controller-runtime/pkg/log"
-
-	managedcontrolplanev1alpha1 "github.com/alexander-demicev/k3s-CPaaS/api/v1alpha1"
+	"sigs.k8s.io/controller-runtime/pkg/reconcile"
 )
+
+// SetupWithManager sets up the controller with the Manager.
+func (r *ManagedControlPlaneReconciler) SetupWithManager(mgr ctrl.Manager) error {
+	return ctrl.NewControllerManagedBy(mgr).
+		For(&managedcontrolplanev1.ManagedControlPlane{}).
+		Complete(r)
+}
 
 // ManagedControlPlaneReconciler reconciles a ManagedControlPlane object
 type ManagedControlPlaneReconciler struct {
@@ -37,26 +45,18 @@ type ManagedControlPlaneReconciler struct {
 //+kubebuilder:rbac:groups=managedcontrolplane.k3s.control-plane.io,resources=managedcontrolplanes/status,verbs=get;update;patch
 //+kubebuilder:rbac:groups=managedcontrolplane.k3s.control-plane.io,resources=managedcontrolplanes/finalizers,verbs=update
 
-// Reconcile is part of the main kubernetes reconciliation loop which aims to
-// move the current state of the cluster closer to the desired state.
-// TODO(user): Modify the Reconcile function to compare the state specified by
-// the ManagedControlPlane object against the actual cluster state, and then
-// perform operations to make the cluster state reflect the state specified by
-// the user.
-//
-// For more details, check Reconcile and its Result here:
-// - https://pkg.go.dev/sigs.k8s.io/controller-runtime@v0.14.1/pkg/reconcile
-func (r *ManagedControlPlaneReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl.Result, error) {
-	_ = log.FromContext(ctx)
+func (r *ManagedControlPlaneReconciler) Reconcile(ctx context.Context, req reconcile.Request) (ctrl.Result, error) {
+	logger := ctrl.LoggerFrom(ctx)
 
-	// TODO(user): your logic here
+	logger.Info("Reconciling ManagedControlPlane")
 
+	mcp := &managedcontrolplanev1.ManagedControlPlane{}
+	if err := r.Get(ctx, req.NamespacedName, mcp); err != nil {
+		if apierrors.IsNotFound(err) {
+			logger.Info("Object was not found, registration client has to create it")
+			return reconcile.Result{}, nil
+		}
+		return reconcile.Result{}, fmt.Errorf("failed to get machine registration object: %w", err)
+	}
 	return ctrl.Result{}, nil
-}
-
-// SetupWithManager sets up the controller with the Manager.
-func (r *ManagedControlPlaneReconciler) SetupWithManager(mgr ctrl.Manager) error {
-	return ctrl.NewControllerManagedBy(mgr).
-		For(&managedcontrolplanev1alpha1.ManagedControlPlane{}).
-		Complete(r)
 }

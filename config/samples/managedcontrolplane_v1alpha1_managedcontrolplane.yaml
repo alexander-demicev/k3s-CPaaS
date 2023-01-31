@@ -1,0 +1,12 @@
+apiVersion: managedcontrolplane.k3s.control-plane.io/v1alpha1
+kind: ManagedControlPlane
+metadata:
+  labels:
+    app.kubernetes.io/name: managedcontrolplane
+    app.kubernetes.io/instance: managedcontrolplane-sample
+    app.kubernetes.io/part-of: k3s-cpaas
+    app.kubernetes.io/managed-by: kustomize
+    app.kubernetes.io/created-by: k3s-cpaas
+  name: managedcontrolplane-sample
+spec:
+  # TODO(user): Add fields here

@@ -7,4 +7,14 @@ layout:
 - go.kubebuilder.io/v3
 projectName: k3s-cpaas
 repo: github.com/alexander-demicev/k3s-CPaaS
+resources:
+- api:
+    crdVersion: v1
+    namespaced: true
+  controller: true
+  domain: k3s.control-plane.io
+  group: managedcontrolplane
+  kind: ManagedControlPlane
+  path: github.com/alexander-demicev/k3s-CPaaS/api/v1alpha1
+  version: v1alpha1
 version: "3"

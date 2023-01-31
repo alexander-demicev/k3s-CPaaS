@@ -22,12 +22,8 @@ import (
 
 // ManagedControlPlaneSpec defines the desired state of ManagedControlPlane
 type ManagedControlPlaneSpec struct {
-	// INSERT ADDITIONAL SPEC FIELDS - desired state of cluster
-	// Important: Run "make" to regenerate code after modifying this file
-
-	// Deployment is the deployment configuration for the control plane pods
-	// +optional
-	Deployment Deployment `json:"deployment,omitempty"`
+	// Replicas is the number of control plane nodes
+	Replicas *int `json:"replicas"`
 
 	// Service is the service configuration for the control plane pods
 	// +optional
@@ -36,10 +32,6 @@ type ManagedControlPlaneSpec struct {
 	// K3SConfig is the configuration for the K3S server
 	// +optional
 	K3SConfig K3SConfig `json:"k3sConfig,omitempty"`
-}
-
-type Deployment struct {
-	Replicas *int `json:"replicas"`
 }
 
 type Service struct {

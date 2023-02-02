@@ -146,12 +146,14 @@ spec:
                   plane pods
                 properties:
                   port:
+                    format: int32
                     type: integer
                 required:
                 - port
                 type: object
             required:
             - replicas
+            - service
             type: object
           status:
             description: ManagedControlPlaneStatus defines the observed state of ManagedControlPlane

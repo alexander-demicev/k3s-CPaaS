@@ -23,11 +23,10 @@ import (
 // ManagedControlPlaneSpec defines the desired state of ManagedControlPlane
 type ManagedControlPlaneSpec struct {
 	// Replicas is the number of control plane nodes
-	Replicas *int `json:"replicas"`
+	Replicas int `json:"replicas"`
 
 	// Service is the service configuration for the control plane pods
-	// +optional
-	Service Service `json:"service,omitempty"`
+	Service Service `json:"service"`
 
 	// K3SConfig is the configuration for the K3S server
 	// +optional
@@ -35,7 +34,7 @@ type ManagedControlPlaneSpec struct {
 }
 
 type Service struct {
-	Port int `json:"port"`
+	Port int32 `json:"port"`
 }
 
 type K3SConfig struct {
